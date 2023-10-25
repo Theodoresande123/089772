@@ -8,8 +8,12 @@ include_once("../connection.php");
 if (isset($_GET['logout'])) {
   session_destroy();
   unset($_SESSION['username']);
-  header("location: login.php");
+  header("location: ../login.php");
 }
+
+if(!isset($_SESSION['loggin']))
+  die(header("location: ../login.php?msg='You must log in first!'"));
+
 $login = $_SESSION['loggin'];
 ?>
 <!doctype html>

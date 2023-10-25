@@ -30,12 +30,12 @@ require_once "../vendor/autoload.php";
 		<?php include('../errors.php'); ?>
 		<div class="form-group">
 			<label>Username</label>
-			<input type="text" class="form-control" name="username" id="uname">
+			<input type="text" class="form-control" name="username" id="uname" placeholder="theodoresande">
 		</div>
 
 		<label>Password</label>
 		<div class="form-group d-flex">
-			<input type="password" class="form-control" name="password" id="password">
+			<input type="password" class="form-control" name="password" id="password" placeholder="pass123">
 			<button class="btn btn-dark" type="button" id="togglePass">
 				<i class="fa fa-eye" id="togglePassIcon"></i>
 			</button>

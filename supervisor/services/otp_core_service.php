@@ -71,7 +71,7 @@ class OTPCoreService
         $mail->smtpClose();
     }
 
-    // Get the student/owner email address
+    // Get the supervisor/Admin email address
     private static function getEmail(?string $uname, ?string $pwd): string
     {
         global $conn;
