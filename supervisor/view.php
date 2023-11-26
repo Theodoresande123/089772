@@ -2,10 +2,6 @@
 session_start();
 include_once("../connection.php");
 
-
-if (!isset($_SESSION['loggin']))
-  die(header("Location: ../index.php?msg='You must log in first'"));
-
 if (isset($_GET['logout'])) {
   session_destroy();
   unset($_SESSION['username']);
@@ -69,64 +65,75 @@ $login = $_SESSION['loggin'];
 
 <body>
   <!-- navigation bar -->
-  <nav class="navbar fixed-top navbar-expand-lg navbar-dark n">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="/project/index.php">HOSTEL WORLD</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a class="nav-link" aria-current="page" href="/project/index.php">Home</a>
-          </li>
-          <li class="nav-item">
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="/project/hostels.php">Hostel</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/project/myhostels.php">My Profile</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/project/about.php">About Us</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/project/contact.php">Contact Us</a>
-          </li>
-          <?php if ($login) : ?>
-            <li class='nav-item'>
-              <a class='nav-link' href="../logout.php">LOGOUT</a>
+  <div class="navigation">
+    <nav class="navbar fixed-top navbar-expand-lg navbar-dark navigations">
+      <div class="container-fluid bg-dark">
+        <a class="navbar-brand" href="/project/index.php">
+          HOSTEL WORLD
+          <span style="color:red;">(ADMIN)</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link" aria-current="page" href="dashboard.php">Home</a>
             </li>
-          <?php endif; ?>
-        </ul>
-        <div class="d-flex">
-          <?php
-          if (!$login) : ?>
-            <a class="navbar-brand" href="login.php">
-              <img src="https://img.icons8.com/color/48/000000/user.png" alt="" width="30" height="24" class="d-inline-block align-text-top">User Login
 
-            </a>
+            <li class="nav-item">
+              <a class="nav-link active" href="hostels.php">Hostels</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="profile.php">Profile</a>
+            </li>
 
-            <a class="navbar-brand" href="admin_login.php">
-              <img src="https://img.icons8.com/external-itim2101-lineal-color-itim2101/64/000000/external-admin-network-technology-itim2101-lineal-color-itim2101-1.png" alt="" width="30" height="24" class="d-inline-block align-text-top">Admin
-              Login
-            </a>
-
-          <?php endif; ?>
-          <?php if (isset($_SESSION['username'])) : ?>
-            <p>
-            <div class="d-flex">
-              <h5 class="mt-1 mr-2 text-white" type="submit">
-                <i class="fa fa-user text-white"></i>
-                <?php echo $_SESSION['username']; ?>
-              </h5>
-            </div>
-            </p>
-          <?php endif ?>
-
+            <li class="nav-item">
+              <a class="nav-link" href="partners.php">Partners</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="queries.php">Queries</a>
+            </li>
+            <?php if ($login) : ?>
+              <li class='nav-item'>
+                <a class='nav-link' href="../logout.php">LOGOUT</a>
+              </li>
+            <?php endif; ?>
+          </ul>
+          <div class="d-flex">
+            <?php
+            if (!$login) : ?><a class="navbar-brand" href="login.php">
+                <img src="https://img.icons8.com/color/48/000000/user.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                User Login
+              </a>
+              <a class="navbar-brand" href="admin_login.php">
+                <img src="https://img.icons8.com/external-itim2101-lineal-color-itim2101/64/000000/external-admin-network-technology-itim2101-lineal-color-itim2101-1.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                Partner Login
+              </a>
+              <a class="navbar-brand" href="supervisor/supervisor_login.php" style="background-color:chartreuse;color:brown;font-weight:900;border-radius:2px;padding-right:3px;">
+                <img src="https://img.icons8.com/external-itim2101-lineal-color-itim2101/64/000000/external-admin-network-technology-itim2101-lineal-color-itim2101-1.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                Admin Login
+              </a>
+            <?php endif; ?>
+            <?php if (isset($_SESSION['username'])) : ?>
+              <p>
+              <div class="d-flex">
+                <h5 class="mt-1 mr-2 text-white" type="submit">
+                  <i class="fa fa-user text-white"></i>
+                  <?php echo $_SESSION['username']; ?>
+                </h5>
+              </div>
+              </p>
+            <?php endif ?>
+          </div>
         </div>
       </div>
-  </nav>
+    </nav>
+  </div>
+  <br>
+  <br>
+  <br>
+  <br>
   <br><br><br>
   <div class="container">
     <ul class="nav nav-pills mb-3 col-md-offset-3" id="pills-tab" role="tablist">
@@ -139,12 +146,7 @@ $login = $_SESSION['loggin'];
       <li class="nav-item">
         <a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-contact" role="tab" aria-controls="pills-contact" aria-selected="false">Owner details</a>
       </li>
-      <li class="nav-item">
-        <?php
-        $id = $_GET['id'];
-        echo "<a class='nav-link' href='reserve.php?id=$id'>Reservation Form</a>";
-        ?>
-      </li>
+
     </ul>
     <div class="tab-content" id="pills-tabContent">
       <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
@@ -244,7 +246,7 @@ $login = $_SESSION['loggin'];
             <!-- Grid column -->
             <div class="col-md-2">
               <h6 class="text-uppercase font-weight-bold">
-                <a href="/project/about.php" class="text-white">About us</a>
+                <a href="about.php" class="text-white">About us</a>
               </h6>
             </div>
             <!-- Grid column -->
@@ -252,7 +254,7 @@ $login = $_SESSION['loggin'];
             <!-- Grid column -->
             <div class="col-md-2">
               <h6 class="text-uppercase font-weight-bold">
-                <a href="/project/hostels.php" class="text-white">Hostels</a>
+                <a href="hostels.php" class="text-white">Hostels</a>
               </h6>
             </div>
             <!-- Grid column -->
@@ -260,23 +262,7 @@ $login = $_SESSION['loggin'];
             <!-- Grid column -->
             <div class="col-md-2">
               <h6 class="text-uppercase font-weight-bold">
-                <a href="#!" class="text-white">Review</a>
-              </h6>
-            </div>
-            <!-- Grid column -->
-
-            <!-- Grid column -->
-            <div class="col-md-2">
-              <h6 class="text-uppercase font-weight-bold">
-                <a href="/project/contact.php" class="text-white">Help</a>
-              </h6>
-            </div>
-            <!-- Grid column -->
-
-            <!-- Grid column -->
-            <div class="col-md-2">
-              <h6 class="text-uppercase font-weight-bold">
-                <a href="/project/contact.php" class="text-white">Contact</a>
+                <a href="queries.php" class="text-white">Review</a>
               </h6>
             </div>
             <!-- Grid column -->

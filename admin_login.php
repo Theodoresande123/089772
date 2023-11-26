@@ -20,7 +20,7 @@
 
 <body>
 	<div class="header">
-		<h2>Partner Login</h2>
+		<h2>Owner Login</h2>
 	</div>
 
 	<form method="post" action="admin_login.php">

@@ -1,6 +1,5 @@
 <?php
 session_start();
-// include_once
 // initializing variables
 $username = "";
 $email    = "";
@@ -41,5 +40,3 @@ if (isset($_POST['login_user'])) {
         }
     }
   }
-  
-  ?>

@@ -1,7 +1,13 @@
 <?php
 session_start();
 include_once("../connection.php");
+
 error_reporting(1);
+
+
+if (!isset($_SESSION['loggin']))
+    die(header("Location: ../index.php?msg='You must log in first'"));
+
 
 if (!isset($_SESSION['username'])) {
     $_SESSION['msg'] = "You must log in first";
@@ -74,7 +80,7 @@ if (isset($_GET['logout'])) {
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link" aria-current="page" href="/project/index.php">Home</a>
+                            <a class="nav-link" aria-current="page" href="../index.php">Home</a>
                         </li>
 
                         <li class="nav-item">
@@ -90,29 +96,24 @@ if (isset($_GET['logout'])) {
                         <li class="nav-item">
                             <a class="nav-link" href="/project/contact.php">Contact Us</a>
                         </li>
-                        <?php
-                        if ($_SESSION['loggin']) {
-                            echo "</li>
+                        <?php if ($login) : ?>
                             <li class='nav-item'>
-                       <a class='nav-link'href='index.php?logout='1''>LOGOUT</a>
-                        </li>";
-                        }
-                        ?>
+                                <a class='nav-link' href="logout.php">LOGOUT</a>
+                            </li>
+                        <?php endif; ?>
                     </ul>
                     <div class="d-flex">
                         <?php
-                        if (!$_SESSION['loggin']) {
-                            echo '<a class="navbar-brand" href="login.php">
-                           <img src="https://img.icons8.com/color/48/000000/user.png" alt="" width="30" height="24" class="d-inline-block align-text-top">User Login
-
-                       </a>
-                       <a class="navbar-brand" href="admin_login.php">
-                           <img src="https://img.icons8.com/external-itim2101-lineal-color-itim2101/64/000000/external-admin-network-technology-itim2101-lineal-color-itim2101-1.png" alt="" width="30" height="24" class="d-inline-block align-text-top">Admin
-                           Login
-
-                       </a>';
-                        }
-                        ?>
+                        if (!$login) : ?>
+                            <a class="navbar-brand" href="../login.php">
+                                <img src="https://img.icons8.com/color/48/000000/user.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                                User Login
+                            </a>
+                            <a class="navbar-brand" href="../admin_login.php">
+                                <img src="https://img.icons8.com/external-itim2101-lineal-color-itim2101/64/000000/external-admin-network-technology-itim2101-lineal-color-itim2101-1.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                                Admin Login
+                            </a>
+                        <?php endif; ?>
                         <?php if (isset($_SESSION['username'])) : ?>
                             <p>
                             <div class="d-flex">
@@ -133,8 +134,6 @@ if (isset($_GET['logout'])) {
 
     <br>
     <div class="container">
-
-
         <?php
         $x = $_SESSION['username'];
         if (!$conn) {
@@ -145,7 +144,7 @@ if (isset($_GET['logout'])) {
         $data1 = mysqli_query($conn, $query1);
 
         $result1 = mysqli_fetch_assoc($data1);
-        $id = ($result1['student_id']);
+        $id = $result1['student_id'];
 
         $query = "SELECT * FROM reserve WHERE student_id = $id";
         $data = mysqli_query($conn, $query);
@@ -184,9 +183,14 @@ if (isset($_GET['logout'])) {
                 <td>" .
                     (($result['registration_status'] === "NOT PAID") ? "
                     <button type='button' class='btn btn-warning' data-toggle='modal' data-target='#myModal'>
-                    Pay Reservation
+                        Pay Reservation
                     </button>
-                    " : "PAID")
+                    " :
+                        "<p style='font-weight:900;'>
+                            PAID
+                            <i class='fa fa-check text-success'></i>
+                        </p>"
+                    )
                     . "</td>" .
                     "</td>";
                 echo "</tr>";

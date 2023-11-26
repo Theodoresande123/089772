@@ -2,6 +2,10 @@
 session_start();
 // error_reporting(0);
 
+// Check for error messages
+if (isset($_GET['msg']))
+    echo "<script>alert(" . $_GET['msg'] . ")</script>";
+
 if (isset($_GET['logout'])) {
     session_destroy();
     unset($_SESSION['username']);
@@ -13,7 +17,6 @@ if (isset($_GET['logout'])) {
     <html lang="en">
 
     <head>
-        <!-- Required meta tags -->
         <!-- Required meta tags -->
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -78,22 +81,22 @@ if (isset($_GET['logout'])) {
                             </li>
 
                             <li class="nav-item">
-                                <a class="nav-link" href=<?php echo ($_SESSION['loggin']??false === true) ? "./project/hostels.php" : "#" ?>>Hostels</a>
+                                <a class="nav-link" href=<?php echo ($_SESSION['loggin'] ?? false === true) ? "./project/hostels.php" : "#" ?>>Hostels</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href=<?php echo ($_SESSION['loggin']??false === true) ? "./project/myhostels.php" : "#" ?>>My Profile</a>
+                                <a class="nav-link" href=<?php echo ($_SESSION['loggin'] ?? false === true) ? "./project/myhostels.php" : "#" ?>>My Profile</a>
                             </li>
 
                             <li class="nav-item">
-                                <a class="nav-link" href=<?php echo ($_SESSION['loggin']??false === true) ? "./project/about.php" : "#" ?>>About Us</a>
+                                <a class="nav-link" href=<?php echo ($_SESSION['loggin'] ?? false === true) ? "./project/about.php" : "#" ?>>About Us</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href=<?php echo ($_SESSION['loggin']??false === true) ? "./project/contact.php" : "#" ?>>Contact Us</a>
+                                <a class="nav-link" href=<?php echo ($_SESSION['loggin'] ?? false === true) ? "./project/contact.php" : "#" ?>>Contact Us</a>
                             </li>
                             <?php
                             if ($login) : ?>
                                 <li class='nav-item'>
-                                    <a class='nav-link' href="index.php?logout='1'">LOGOUT</a>
+                                    <a class='nav-link' href="logout.php">LOGOUT</a>
                                 </li>
                             <?php endif; ?>
                         </ul>
@@ -105,14 +108,14 @@ if (isset($_GET['logout'])) {
 
                                 <a class="navbar-brand" href="login.php">
                                     <img src="https://img.icons8.com/color/48/000000/user.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
-                                    User Login
+                                    Student Login
                                 </a>
 
                                 <div class="spacer"></div>
 
                                 <a class="navbar-brand" href="admin_login.php">
                                     <img src="https://img.icons8.com/external-itim2101-lineal-color-itim2101/64/000000/external-admin-network-technology-itim2101-lineal-color-itim2101-1.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
-                                    Partner Login
+                                    Owner Login
                                 </a>
 
                                 <div class="spacer"></div>
@@ -132,7 +135,7 @@ if (isset($_GET['logout'])) {
                                 <p>
                                 <div class="d-flex">
                                     <h5 class="mt-1 mr-2 text-white" type="submit">
-                                        <i class="fa fa-user text-white"></i>
+                                        <i class="fa fa-user text-neutral-700"></i>
                                         <?php echo $_SESSION['username']; ?>
                                     </h5>
                                 </div>

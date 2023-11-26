@@ -58,7 +58,7 @@ require_once "vendor/autoload.php";
 				Login
 			</button>
 			<a class="" href="admin_login.php">
-				Log in as a partner
+				Log in as owner/realtor
 			</a>
 		</div>
 

@@ -2,10 +2,9 @@
 session_start();
 include_once("../connection.php");
 
-if (!isset($_SESSION['username'])) {
-  $_SESSION['msg'] = "You must log in first";
-  header('location: ../login.php');
-}
+if (!isset($_SESSION['loggin']))
+  die(header("Location: ../index.php?msg='You must log in first'"));
+
 if (isset($_GET['logout'])) {
   session_destroy();
   unset($_SESSION['username']);
@@ -17,7 +16,6 @@ if (isset($_GET['logout'])) {
 <html lang="en">
 
 <head>
-  <!-- Required meta tags -->
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -89,33 +87,23 @@ if (isset($_GET['logout'])) {
             <li class="nav-item">
               <a class="nav-link" href="/project/contact.php">Contact Us</a>
             </li>
-            <?php
-            if ($_SESSION['loggin']) {
-              echo "</li>
-                            <li class='nav-item'>
-                       <a class='nav-link'href='index.php?logout='1''>LOGOUT</a>
-                        </li>";
-            }
-            ?>
+            <?php if ($login) : ?>
+              <li class='nav-item'>
+                <a class='nav-link' href="../logout.php">LOGOUT</a>
+              </li>
+            <?php endif; ?>
           </ul>
           <div class="d-flex">
-            <?php
-            if (!$_SESSION['loggin']) {
-              echo '<a class="navbar-brand" href="login.php">
-                           <img src="https://img.icons8.com/color/48/000000/user.png" alt="" width="30" height="24" class="d-inline-block align-text-top">User Login
-
-                       </a>
-                       <a class="navbar-brand" href="admin_login.php">
-                           <img src="https://img.icons8.com/external-itim2101-lineal-color-itim2101/64/000000/external-admin-network-technology-itim2101-lineal-color-itim2101-1.png" alt="" width="30" height="24" class="d-inline-block align-text-top">Admin
-                           Login
-
-                       </a>';
-            }
-            ?>
             <?php if (isset($_SESSION['username'])) : ?>
-              <p><img src="https://img.icons8.com/metro/26/000000/guest-male.png"><button class="btn btn-primary" type="submit"> <a href="myhostels.php" style="color: white; text-decoration:none"><?php echo $_SESSION['username']; ?></a></button> </p>
+              <p>
+              <div class="d-flex">
+                <h5 class="mt-1 mr-2 text-white" type="submit">
+                  <i class="fa fa-user text-white"></i>
+                  <?php echo $_SESSION['username']; ?>
+                </h5>
+              </div>
+              </p>
             <?php endif ?>
-
           </div>
     </nav>
   </div>
@@ -129,12 +117,15 @@ if (isset($_GET['logout'])) {
             <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
               <div class="card-body p-4 p-md-5">
                 <h3 class="mb-4 pb-2 pb-md-0 mb-md-5">Reservation Form</h3>
-                <form method="POST">
+                <form action="payment.php" method="POST">
+                  <div class="row" hidden>
+                    <input type="text" name="id" id="hostelID" value=<?php echo $_GET['id']; ?>>
+                  </div>
                   <div class="row">
                     <div class="col-md-6 mb-4">
                       <div class="form-outline">
                         <label class="form-label">Name</label>
-                        <input type="text" name="Name" class="form-control form-control-lg" />
+                        <input type="text" name="name" class="form-control form-control-lg" />
                       </div>
 
                     </div>
@@ -218,60 +209,11 @@ if (isset($_GET['logout'])) {
                       <input type="radio" name="payment_mode" id="Mpesa">&nbsp;
                       <img src="../images/mpesa-logo.svg" alt="" width="auto" height="80">
                     </div>
-                    <div class="d-flex">
-                      <input type="radio" name="payment_mode" id="Google Pay">&nbsp;
-                      <img src="../images/gpay-logo.png" alt="" width="auto" height="65">
-                    </div>
-                    <div class="d-flex">
-                      <input type="radio" name="payment_mode" id="Apple Pay">&nbsp;
-                      <img src="../images/cash-bill.png" idth="auto" height="70">
-                    </div>
                   </div>
                   <hr>
                   <div class="mt-4 pt-2 d-flex justify-content-between">
-                    <button class="btn btn-success btn-lg">Pay and Send</button>
-                    <button type="submit" class="btn btn-danger btn-lg" name="submit">Only Send</button>
-                    <button type="reset" class="btn btn-primary btn-lg" name="submit">Clear Form</button>
+                    <button type="submit" class="btn btn-success btn-lg">View Invoice</button>
                   </div>
-                  <?php
-                  $x = $_SESSION['username'];
-                  echo ($x);
-                  if (!$conn) {
-                    die("Connection failed: " . mysqli_connect_error());
-                  }
-                  $query1 = "SELECT * FROM students WHERE username='$x'";
-                  $data1 = mysqli_query($conn, $query1);
-                  $result1 = mysqli_fetch_assoc($data1);
-                  $student_id = ($result1['student_id']) ?? $result1['owner_id'];
-
-                  $hostel_id = $_GET['id'];
-                  $query = "SELECT * FROM hostels WHERE hostel_id='$hostel_id'";
-                  $data = mysqli_query($conn, $query);
-                  $result = mysqli_fetch_assoc($data);
-                  $hostel_name = $result['hostel_name'];
-                  $owner = $result['owner_id'];
-
-                  if (isset($_POST['submit'])) {
-                    $sname = $_POST['Name'];
-                    $gender = $_POST['gender'];
-                    $birthday = $_POST['dob'];
-                    $email = $_POST['email'];
-                    $phone = $_POST['phoneno'];
-                    $category = $_POST['category_id'];
-                    $room = $_POST['room'];
-
-                    $query = "insert into reserve
-    (name,gender,birthday,hostel_id,hostel_name,category_id,room_type,email,phoneno,student_id,owner_id) 
-    values ('$sname','$gender','$birthday','$hostel_id','$hostel_name','$category','$room','$email','$phone','$student_id','$owner')";
-
-                    $run = mysqli_query($conn, $query) or die(mysqli_error($conn));
-                    if ($run)
-                      echo "Message sent successfully!!!!";
-                    else
-                      echo "Message not sent!!!!!";
-                  }
-                  ?>
-
                 </form>
               </div>
             </div>

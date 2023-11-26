@@ -1,15 +1,14 @@
 <?php
 session_start();
 
-//   if (!isset($_SESSION['username'])) {
-//   	$_SESSION['msg'] = "You must log in first";
-//   	header('location: login.php');
-//   }
 if (isset($_GET['logout'])) {
     session_destroy();
     unset($_SESSION['username']);
     header("location: login.php");
 }
+if (!isset($_SESSION['loggin']))
+    die(header("Location: ../index.php?msg='You must log in first'"));
+
 $login = $_SESSION['loggin'];
 ?>
 <!doctype html>
@@ -143,12 +142,11 @@ $login = $_SESSION['loggin'];
                     <li class="nav-item">
                         <a class="nav-link" href="queries.php">Queries</a>
                     </li>
-                    <?php
-                    if ($login) : ?>"</li>
-                    <li class='nav-item'>
-                        <a class='nav-link' href="index.php?logout='1'">LOGOUT</a>
-                    </li>
-                <?php endif; ?>
+                    <?php if ($login) : ?>
+                        <li class='nav-item'>
+                            <a class='nav-link' href="../logout.php">LOGOUT</a>
+                        </li>
+                    <?php endif; ?>
                 </ul>
                 <div class="d-flex">
                     <?php
@@ -244,7 +242,7 @@ $login = $_SESSION['loggin'];
                         <!-- Grid column -->
                         <div class="col-md-2">
                             <h6 class="text-uppercase font-weight-bold">
-                                <a href="/project/about.php" class="text-white">About us</a>
+                                <a href="about.php" class="text-white">About us</a>
                             </h6>
                         </div>
                         <!-- Grid column -->
@@ -252,7 +250,7 @@ $login = $_SESSION['loggin'];
                         <!-- Grid column -->
                         <div class="col-md-2">
                             <h6 class="text-uppercase font-weight-bold">
-                                <a href="/project/hostels.php" class="text-white">Hostels</a>
+                                <a href="hostels.php" class="text-white">Hostels</a>
                             </h6>
                         </div>
                         <!-- Grid column -->
@@ -260,23 +258,7 @@ $login = $_SESSION['loggin'];
                         <!-- Grid column -->
                         <div class="col-md-2">
                             <h6 class="text-uppercase font-weight-bold">
-                                <a href="#!" class="text-white">Review</a>
-                            </h6>
-                        </div>
-                        <!-- Grid column -->
-
-                        <!-- Grid column -->
-                        <div class="col-md-2">
-                            <h6 class="text-uppercase font-weight-bold">
-                                <a href="/project/contact.php" class="text-white">Help</a>
-                            </h6>
-                        </div>
-                        <!-- Grid column -->
-
-                        <!-- Grid column -->
-                        <div class="col-md-2">
-                            <h6 class="text-uppercase font-weight-bold">
-                                <a href="/project/contact.php" class="text-white">Contact</a>
+                                <a href="queries.php" class="text-white">Review</a>
                             </h6>
                         </div>
                         <!-- Grid column -->

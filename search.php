@@ -1,15 +1,15 @@
-<?php 
-  session_start(); 
+<?php
+session_start();
 
 //   if (!isset($_SESSION['username'])) {
 //   	$_SESSION['msg'] = "You must log in first";
 //   	header('location: login.php');
 //   }
-  if (isset($_GET['logout'])) {
-  	session_destroy();
-  	unset($_SESSION['username']);
-  	header("location: login.php");
-  }
+if (isset($_GET['logout'])) {
+    session_destroy();
+    unset($_SESSION['username']);
+    header("location: login.php");
+}
 
 ?>
 <!doctype html>
@@ -46,37 +46,35 @@
         <div class="container-fluid">
             <a class="navbar-brand" href="/project/index.php">HOSTEL WORLD</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
+                <span class="navbar-toggler-icon"></span>
+            </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
                         <a class="nav-link" aria-current="page" href="/project/index.php">Home</a>
                     </li>
                     <li class="nav-item">
-                        <li class="nav-item">
-                            <a class="nav-link" aria-current="page" href="#">Hostel</a>
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="#">Hostel</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/project/myhostels.php">My Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/project/about.php">About Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/project/contact.php">Contact Us</a>
+                    </li>
+                    <?php if ($login) : ?>
+                        <li class='nav-item'>
+                            <a class='nav-link' href="logout.php">LOGOUT</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link active" href="/project/myhostels.php">My Profile</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/project/about.php">About Us</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/project/contact.php">Contact Us</a>
-                            <?php
-                        if($_SESSION['loggin']){
-                            echo "</li>
-                            <li class='nav-item'>
-                       <a class='nav-link'href='index.php?logout='1''>LOGOUT</a>
-                        </li>";
-                        }
-                        ?>
-                        <div class="d-flex">
-                       <?php
-                       if(!$_SESSION['loggin']){
-                           echo '<a class="navbar-brand" href="login.php">
+                    <?php endif; ?>
+                    <div class="d-flex">
+                        <?php
+                        if (!$_SESSION['loggin']) {
+                            echo '<a class="navbar-brand" href="login.php">
                            <img src="https://img.icons8.com/color/48/000000/user.png" alt="" width="30" height="24" class="d-inline-block align-text-top">User Login
 
                        </a>
@@ -85,124 +83,126 @@
                            Login
 
                        </a>';
-                       }
-                       ?>
-                       <?php  if (isset($_SESSION['username'])) : ?>
-    	<p><img src="https://img.icons8.com/metro/26/000000/guest-male.png"><button class="btn btn-primary" type="submit"> <a href="myhostels.php" style="color: white; text-decoration:none"><?php echo $_SESSION['username']; ?></a></button> </p>
-       <?php endif ?>
-            
-                </div>
+                        }
+                        ?>
+                        <?php if (isset($_SESSION['username'])) : ?>
+                            <p><img src="https://img.icons8.com/metro/26/000000/guest-male.png"><button class="btn btn-primary" type="submit"> <a href="myhostels.php" style="color: white; text-decoration:none"><?php echo $_SESSION['username']; ?></a></button> </p>
+                        <?php endif ?>
+
+                    </div>
                 </ul>
             </div>
     </nav>
     <br><br><br>
-  <div class="container">
-    <div class="btn-group btn-group-justified btn-lg">
-      <button type="button" class="btn btn-default disabled"><strong>SEARCH YOUR DESTINY LOCATION</strong></button>
-    </div>
-    
-    <form action=""method ="GET">
-        <div class="input-group mb-3">
-            <input type="text" name="search"value="<?php if(isset($_GET['search'])){echo $_GET['search'];}?>" class="form-control" placeholder="search data">
-            <button type="submit" class="btn btn-primary">Search</button>
+    <div class="container">
+        <div class="btn-group btn-group-justified btn-lg">
+            <button type="button" class="btn btn-default disabled"><strong>SEARCH YOUR DESTINY LOCATION</strong></button>
         </div>
-    </form>
-    <hr>
-    <!-- <div class="container">
+
+        <form action="" method="GET">
+            <div class="input-group mb-3">
+                <input type="text" name="search" value="<?php if (isset($_GET['search'])) {
+                                                            echo $_GET['search'];
+                                                        } ?>" class="form-control" placeholder="search data">
+                <button type="submit" class="btn btn-primary">Search</button>
+            </div>
+        </form>
+        <hr>
+        <!-- <div class="container">
     <h1>Add hostel</h1>
     <div class="btn-group btn-group-justified btn-lg ">
       <a href="addhostel.php"><button type="button" class="btn btn-primary">ADD HOSTEL</button></a>
     </div>
   </div> -->
-  
-  <br><br>
- 
-    <div class="footer">
-        <!-- Footer -->
-        <footer class="text-center text-white" style="background-color: rgb(209 20 80);">
-            <!-- Grid container -->
-            <div class="container">
-                <!-- Section: Links -->
-                <section class="mt-5">
-                    <!-- Grid row-->
-                    <div class="row text-center d-flex justify-content-center pt-5">
-                        <!-- Grid column -->
-                        <div class="col-md-2">
-                            <h6 class="text-uppercase font-weight-bold">
-                                <a href="/project/about.php" class="text-white">About us</a>
-                            </h6>
+
+        <br><br>
+
+        <div class="footer">
+            <!-- Footer -->
+            <footer class="text-center text-white" style="background-color: rgb(209 20 80);">
+                <!-- Grid container -->
+                <div class="container">
+                    <!-- Section: Links -->
+                    <section class="mt-5">
+                        <!-- Grid row-->
+                        <div class="row text-center d-flex justify-content-center pt-5">
+                            <!-- Grid column -->
+                            <div class="col-md-2">
+                                <h6 class="text-uppercase font-weight-bold">
+                                    <a href="/project/about.php" class="text-white">About us</a>
+                                </h6>
+                            </div>
+                            <!-- Grid column -->
+
+                            <!-- Grid column -->
+                            <div class="col-md-2">
+                                <h6 class="text-uppercase font-weight-bold">
+                                    <a href="/project/hostels.php" class="text-white">Hostels</a>
+                                </h6>
+                            </div>
+                            <!-- Grid column -->
+
+                            <!-- Grid column -->
+                            <div class="col-md-2">
+                                <h6 class="text-uppercase font-weight-bold">
+                                    <a href="#!" class="text-white">Review</a>
+                                </h6>
+                            </div>
+                            <!-- Grid column -->
+
+                            <!-- Grid column -->
+                            <div class="col-md-2">
+                                <h6 class="text-uppercase font-weight-bold">
+                                    <a href="/project/contact.php" class="text-white">Help</a>
+                                </h6>
+                            </div>
+                            <!-- Grid column -->
+
+                            <!-- Grid column -->
+                            <div class="col-md-2">
+                                <h6 class="text-uppercase font-weight-bold">
+                                    <a href="/project/contact.php" class="text-white">Contact</a>
+                                </h6>
+                            </div>
+                            <!-- Grid column -->
                         </div>
-                        <!-- Grid column -->
+                        <!-- Grid row-->
+                    </section>
+                    <!-- Section: Links -->
 
-                        <!-- Grid column -->
-                        <div class="col-md-2">
-                            <h6 class="text-uppercase font-weight-bold">
-                                <a href="/project/hostels.php" class="text-white">Hostels</a>
-                            </h6>
+                    <hr class="my-5" />
+
+                    <!-- Section: Text -->
+                    <section class="mb-5">
+                        <div class="row d-flex justify-content-center">
+                            <div class="col-lg-8">
+                                <p>
+                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt distinctio earum repellat quaerat voluptatibus placeat nam, commodi optio pariatur est quia magnam eum harum corrupti dicta, aliquam sequi voluptate quas.
+                                </p>
+                            </div>
                         </div>
-                        <!-- Grid column -->
+                    </section>
+                    <!-- Section: Text -->
 
-                        <!-- Grid column -->
-                        <div class="col-md-2">
-                            <h6 class="text-uppercase font-weight-bold">
-                                <a href="#!" class="text-white">Review</a>
-                            </h6>
-                        </div>
-                        <!-- Grid column -->
+                    <!-- Section: Social -->
+                    <section class="text-center mb-5">
 
-                        <!-- Grid column -->
-                        <div class="col-md-2">
-                            <h6 class="text-uppercase font-weight-bold">
-                                <a href="/project/contact.php" class="text-white">Help</a>
-                            </h6>
-                        </div>
-                        <!-- Grid column -->
+                        <a href="#" class="fa fa-facebook"></a>
 
-                        <!-- Grid column -->
-                        <div class="col-md-2">
-                            <h6 class="text-uppercase font-weight-bold">
-                                <a href="/project/contact.php" class="text-white">Contact</a>
-                            </h6>
-                        </div>
-                        <!-- Grid column -->
-                    </div>
-                    <!-- Grid row-->
-                </section>
-                <!-- Section: Links -->
+                        <a href="#" class="fa fa-twitter"></a>
+                        <a href="#" class="fa fa-instagram"></a>
 
-                <hr class="my-5" />
+                    </section>
+                    <!-- Section: Social -->
+                </div>
+                <!-- Grid container -->
 
-                <!-- Section: Text -->
-                <section class="mb-5">
-                    <div class="row d-flex justify-content-center">
-                        <div class="col-lg-8">
-                            <p>
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt distinctio earum repellat quaerat voluptatibus placeat nam, commodi optio pariatur est quia magnam eum harum corrupti dicta, aliquam sequi voluptate quas.
-                            </p>
-                        </div>
-                    </div>
-                </section>
-                <!-- Section: Text -->
-
-                <!-- Section: Social -->
-                <section class="text-center mb-5">
-
-                    <a href="#" class="fa fa-facebook"></a>
-
-                    <a href="#" class="fa fa-twitter"></a>
-                    <a href="#" class="fa fa-instagram"></a>
-
-                </section>
-                <!-- Section: Social -->
-            </div>
-            <!-- Grid container -->
-
-            <!-- Copyright -->
-            <!-- Copyright -->
-        </footer>
-        <!-- Footer -->
-    </div>
-    <!-- End of .container -->
+                <!-- Copyright -->
+                <!-- Copyright -->
+            </footer>
+            <!-- Footer -->
+        </div>
+        <!-- End of .container -->
 </body>
 
 </html>

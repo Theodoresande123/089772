@@ -3,19 +3,63 @@ session_start();
 // error_reporting(0);
 
 include_once("../connection.php");
+include_once("./services/basic_functions.php");
+
+$updated = false;
+// Change user details
+if (
+    isset($_POST['changeprofile']) &&
+    isset($_SESSION['loggin'])
+) {
+    // $password = $_POST['password'];
+    $username = mysqli_real_escape_string($conn, $_POST['username']);
+    $firstname = mysqli_real_escape_string($conn, $_POST['firstname']);
+    $secondname = mysqli_real_escape_string($conn, $_POST['secondname']);
+    $lastname = mysqli_real_escape_string($conn, $_POST['lastname']);
+    $email = mysqli_real_escape_string($conn, $_POST['email']);
+    $oldpass = md5(mysqli_real_escape_string($conn, $_POST['oldpassword']));
+    $password = md5(mysqli_real_escape_string($conn, $_POST['password']));
+    $sessionuser = mysqli_real_escape_string($conn, $_SESSION['username']);
+
+
+    // check if passwords do match
+    if (
+        isset($_POST['oldpassword']) &&
+        isset($_POST['password']) &&
+        isset($_POST['confirmpassword']) &&
+        ($_POST['password'] === $_POST['confirmpassword'])
+    ) {
+        // submit new user details
+        $q = "UPDATE supervisors SET username ='$username',first_name ='$firstname',
+        second_name = '$secondname', last_name ='$lastname', email ='$email', password ='$password'
+        WHERE supervisors.username = '$sessionuser' AND supervisors.password = '$oldpass';";
+
+        if (mysqli_query($conn, $q, MYSQLI_STORE_RESULT)) {
+            echo "<script>alert('Profile details updated successfuly!')</script>";
+            $updated = true;
+        } else {
+            $error = mysqli_error($conn);
+            echo "<script>alert('Unable to update user details. Please check your password!')</script>";
+        }
+    }
+}
+
 
 if (isset($_GET['logout'])) {
     session_destroy();
     unset($_SESSION['username']);
-    die(header("location: index.php"));
+    die(header("location: ../index.php"));
 }
+
+if (!isset($_SESSION['loggin']))
+    die(header("Location: ../index.php?msg='You must log in first'"));
+
 $login = $_SESSION['loggin'];
 ?>
 <!doctype html>
 <html lang="en">
 
 <head>
-    <!-- Required meta tags -->
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -78,7 +122,7 @@ $login = $_SESSION['loggin'];
         <nav class="navbar fixed-top navbar-expand-lg navbar-dark navigations">
             <div class="container-fluid bg-dark">
                 <a class="navbar-brand" href="/project/index.php">
-                HOSTEL WORLD
+                    HOSTEL WORLD
                     <span style="color:red;">(ADMIN)</span>
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -103,12 +147,11 @@ $login = $_SESSION['loggin'];
                         <li class="nav-item">
                             <a class="nav-link" href="queries.php">Queries</a>
                         </li>
-                        <?php
-                        if ($login) : ?>"</li>
-                        <li class='nav-item'>
-                            <a class='nav-link' href="index.php?logout='1'">LOGOUT</a>
-                        </li>
-                    <?php endif; ?>
+                        <?php if ($login) : ?>
+                            <li class='nav-item'>
+                                <a class='nav-link' href="../logout.php">LOGOUT</a>
+                            </li>
+                        <?php endif; ?>
                     </ul>
                     <div class="d-flex">
                         <?php
@@ -140,58 +183,84 @@ $login = $_SESSION['loggin'];
             </div>
         </nav>
     </div>
+
     <br>
     <br>
     <br>
     <br>
-    <!-- <div class="container bg-dark text-white text-center" >
-        <h3></h3>
-    </div> -->
-    <div class="container" hidden>
-        <table class="table table-hover">
-            <thead>
-                <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">Hostel Name</th>
-                    <th scope="col">Owner</th>
-                    <th scope="col">City</th>
-                    <th scope="col">Category</th>
-                    <th scope="col">Contact</th>
-                    <th scope="col">Pincode</th>
-                    <th scope="col">County</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                $query = "select * from hostels;";
+    <div class="container-fluid bg-success text-white text-center">
+        <h3>EDIT PROFILE</h3>
+        <div class="container" style="width:25%;">
+            <div class="container" style="border:1px solid #098; border-radius:20px 20px;margin:2%;padding:10px;background-color:#665;">
+                <form action="" method="post">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="username" id="username" placeholder="username" value=<?php echo !$updated ? ($_SESSION['username'] ?? '') : '' ?>>
+                        </div>
+                        <label class="text-warning" for="username">username</label>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="firstname" id="firstname" placeholder="first name" value=<?php echo !$updated ? ($_POST['firstname'] ?? '') : '' ?>>
+                        </div>
+                        <label class="text-warning" for="firstname">first name</label>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="secondname" id="secondname" placeholder="second name" value=<?php echo !$updated ? ($_POST['secondname'] ?? '') : '' ?>>
+                        </div>
+                        <label class="text-warning" for="secondname">second name</label>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="lastname" id="lastname" placeholder="last name" value=<?php echo !$updated ? ($_POST['lastname'] ?? '') : '' ?>>
+                        </div>
+                        <label class="text-warning" for="lastname">last name</label>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input type="email" class="form-control" name="email" id="email" placeholder="email" value=<?php echo !$updated ? ($_POST['email'] ?? '') : '' ?>>
+                        </div>
+                        <label class="text-warning" for="email">email</label>
+                    </div>
 
-                $data = mysqli_query($conn, $query);
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input type="password" class="form-control bg-warning passwordFields" name="oldpassword" id="oldpassword" placeholder="old password">
+                            <button class="btn btn-dark" type="button">
+                                <!-- see -->
+                            </button>
+                        </div>
+                        <label class="text-warning" for="password">old password</label>
+                    </div>
 
-                $total = mysqli_num_rows($data);
-
-
-                if ($total != 0) {
-                    while ($result = mysqli_fetch_assoc($data)) {
-                        $id = $result['hostel_id'];
-                        echo "
-                            <tr>
-                            <td>" . $id . "</td>
-                            <td>" . $result['hostel_name'] . "</td>
-                            <td>" . $result['owner_id'] . "</td>
-                            <td>" . $result['city'] . "</td>
-                            <td>" . $result['category_id'] . "</td>
-                            <td>" . $result['contact_no'] . "</td>
-                            <td>" . $result['pincode'] . "</td>
-                            <td>" . $result['county'] . "</td>
-                            <td>
-                            <button type='button' id='$id' class='btn btn-success replyBtn'>View</button>
-                            </td>
-                            </tr>";
-                    }
-                }
-                ?>
-            </tbody>
-        </table>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input type="password" class="form-control passwordFields" name="password" id="password" placeholder="password">
+                            <button class="btn btn-dark" type="button">
+                                <!-- <i class="fa fa-eye"></i> -->
+                            </button>
+                        </div>
+                        <label class="text-warning" for="password">new password</label>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input type="password" class="form-control passwordFields" name="confirmpassword" id="confirmpassword" placeholder="confirm password">
+                            <button class="btn btn-dark" type="button">
+                                <!-- <i class="fa fa-eye"></i> -->
+                            </button>
+                        </div>
+                        <label class="text-warning" for="confirmpassword">confirm password</label>
+                    </div>
+                    <hr>
+                    <div class="form-group d-flex justify-content-center">
+                        <div class="input-group d-flex justify-content-center">
+                            <button type="submit" name="changeprofile" class="btn btn-primary"> Submit</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 
     <!-- Remove the container if you want to extend the Footer to full width. -->
@@ -207,7 +276,7 @@ $login = $_SESSION['loggin'];
                         <!-- Grid column -->
                         <div class="col-md-2">
                             <h6 class="text-uppercase font-weight-bold">
-                                <a href="/project/about.php" class="text-white">About us</a>
+                                <a href="about.php" class="text-white">About us</a>
                             </h6>
                         </div>
                         <!-- Grid column -->
@@ -215,7 +284,7 @@ $login = $_SESSION['loggin'];
                         <!-- Grid column -->
                         <div class="col-md-2">
                             <h6 class="text-uppercase font-weight-bold">
-                                <a href="/project/hostels.php" class="text-white">Hostels</a>
+                                <a href="hostels.php" class="text-white">Hostels</a>
                             </h6>
                         </div>
                         <!-- Grid column -->
@@ -223,23 +292,7 @@ $login = $_SESSION['loggin'];
                         <!-- Grid column -->
                         <div class="col-md-2">
                             <h6 class="text-uppercase font-weight-bold">
-                                <a href="#!" class="text-white">Review</a>
-                            </h6>
-                        </div>
-                        <!-- Grid column -->
-
-                        <!-- Grid column -->
-                        <div class="col-md-2">
-                            <h6 class="text-uppercase font-weight-bold">
-                                <a href="/project/contact.php" class="text-white">Help</a>
-                            </h6>
-                        </div>
-                        <!-- Grid column -->
-
-                        <!-- Grid column -->
-                        <div class="col-md-2">
-                            <h6 class="text-uppercase font-weight-bold">
-                                <a href="/project/contact.php" class="text-white">Contact</a>
+                                <a href="queries.php" class="text-white">Review</a>
                             </h6>
                         </div>
                         <!-- Grid column -->
@@ -278,7 +331,6 @@ $login = $_SESSION['loggin'];
             <!-- Grid container -->
 
             <!-- Copyright -->
-            <!-- Copyright -->
         </footer>
         <!-- Footer -->
     </div>
@@ -299,7 +351,7 @@ $login = $_SESSION['loggin'];
 
         // const mailModal = document.getElementById("mailModal")
         // const modalBtn = document.getElementById("closemodal")
-        
+
         // modalBtn.addEventListener('click', () => {
         //     closeModal()
         // })

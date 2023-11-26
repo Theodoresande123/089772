@@ -9,6 +9,10 @@ if (isset($_GET['logout'])) {
     unset($_SESSION['username']);
     die(header("location: index.php"));
 }
+
+if (!isset($_SESSION['loggin']))
+    die(header("Location: ../index.php?msg='You must log in first'"));
+
 $login = $_SESSION['loggin'];
 ?>
 <!doctype html>
@@ -33,7 +37,6 @@ $login = $_SESSION['loggin'];
         .lbl {
             color: chartreuse;
         }
-
         #mailModal {
             position: fixed;
             top: 0;
@@ -43,15 +46,22 @@ $login = $_SESSION['loggin'];
             width: 30%;
             border-radius: 5px;
         }
-
         .font-50px a {
             font-size: 25px;
         }
-
         .x {
             position: relative;
             margin-left: 20px;
             margin-right: 20px;
+        }
+
+        @media print {
+            body{background-color: white;}
+            .hidden-on-print {
+                background-color: transparent;
+                border: none;
+                display: none;
+            }
         }
     </style>
     <script src="sweetalert2.min.js"></script>
@@ -74,7 +84,7 @@ $login = $_SESSION['loggin'];
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 
     <!-- navigation bar -->
-    <div class="navigation">
+    <div class="navigation hidden-on-print">
         <nav class="navbar fixed-top navbar-expand-lg navbar-dark navigations">
             <div class="container-fluid bg-dark">
                 <a class="navbar-brand" href="/project/index.php">
@@ -103,12 +113,11 @@ $login = $_SESSION['loggin'];
                         <li class="nav-item">
                             <a class="nav-link" href="queries.php">Queries</a>
                         </li>
-                        <?php
-                        if ($login) : ?>"</li>
-                        <li class='nav-item'>
-                            <a class='nav-link' href="index.php?logout='1'">LOGOUT</a>
-                        </li>
-                    <?php endif; ?>
+                        <?php if ($login) : ?>
+                            <li class='nav-item'>
+                                <a class='nav-link' href='./../logout.php'>LOGOUT</a>
+                            </li>
+                        <?php endif; ?>
                     </ul>
                     <div class="d-flex">
                         <?php
@@ -140,41 +149,49 @@ $login = $_SESSION['loggin'];
             </div>
         </nav>
     </div>
-    <br>
-    <br>
-    <br>
-    <br>
-    <div class="container bg-dark text-white text-center">
-        <h3>Registered Hostels</h3>
-    </div>
-    <div class="container">
-        <table class="table table-hover">
-            <thead>
-                <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">Hostel Name</th>
-                    <th scope="col">Owner</th>
-                    <th scope="col">City</th>
-                    <th scope="col">Category</th>
-                    <th scope="col">Contact</th>
-                    <th scope="col">Pincode</th>
-                    <th scope="col">County</th>
-                    <th scope="col">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                $query = "select * from hostels;";
+    <br class="hidden-on-print">
+    <br class="hidden-on-print">
+    <br class="hidden-on-print">
+    <br class="hidden-on-print">
+    <div id="printDoc">
+        <div class="container bg-dark text-white d-flex justify-content-between">
+            <h5 class="h5 text-warning text-underline">Hostel World</h5>
+            <h3>Registered Hostels</h3>
+            <button type="button" class="btn btn-primary hidden-on-print" onclick="window.print();">
+                <i class="fa fa-print"></i>
+                <span>
+                    Export to PDF/ Print
+                </span>
+            </button>
+        </div>
+        <div class="container">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Hostel Name</th>
+                        <th scope="col">Owner</th>
+                        <th scope="col">City</th>
+                        <th scope="col">Category</th>
+                        <th scope="col">Contact</th>
+                        <th scope="col">Pincode</th>
+                        <th scope="col">County</th>
+                        <th scope="col" class="hidden-on-print">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    $query = "select * from hostels;";
 
-                $data = mysqli_query($conn, $query);
+                    $data = mysqli_query($conn, $query);
 
-                $total = mysqli_num_rows($data);
+                    $total = mysqli_num_rows($data);
 
 
-                if ($total != 0) {
-                    while ($result = mysqli_fetch_assoc($data)) {
-                        $id = $result['hostel_id'];
-                        echo "
+                    if ($total != 0) {
+                        while ($result = mysqli_fetch_assoc($data)) {
+                            $id = $result['hostel_id'];
+                            echo "
                             <tr>
                             <td>" . $id . "</td>
                             <td>" . $result['hostel_name'] . "</td>
@@ -185,18 +202,21 @@ $login = $_SESSION['loggin'];
                             <td>" . $result['pincode'] . "</td>
                             <td>" . $result['county'] . "</td>
                             <td>
-                            <button type='button' id='$id' class='btn btn-success replyBtn'>View</button>
+                           <a href='view.php?id=" . $id . "'>
+                            <button type='button' id=$id class='btn btn-success  hidden-on-print replyBtn'>View</button>
+                           </a>
                             </td>
                             </tr>";
+                        }
                     }
-                }
-                ?>
-            </tbody>
-        </table>
+                    ?>
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <!-- Remove the container if you want to extend the Footer to full width. -->
-    <div class="footer">
+    <div class="footer hidden-on-print">
         <!-- Footer -->
         <footer class="text-center text-white" style="background-color:rgb(102 120 80) ;">
             <!-- Grid container -->
@@ -208,7 +228,7 @@ $login = $_SESSION['loggin'];
                         <!-- Grid column -->
                         <div class="col-md-2">
                             <h6 class="text-uppercase font-weight-bold">
-                                <a href="/project/about.php" class="text-white">About us</a>
+                                <a href="about.php" class="text-white">About us</a>
                             </h6>
                         </div>
                         <!-- Grid column -->
@@ -216,7 +236,7 @@ $login = $_SESSION['loggin'];
                         <!-- Grid column -->
                         <div class="col-md-2">
                             <h6 class="text-uppercase font-weight-bold">
-                                <a href="/project/hostels.php" class="text-white">Hostels</a>
+                                <a href="hostels.php" class="text-white">Hostels</a>
                             </h6>
                         </div>
                         <!-- Grid column -->
@@ -224,23 +244,7 @@ $login = $_SESSION['loggin'];
                         <!-- Grid column -->
                         <div class="col-md-2">
                             <h6 class="text-uppercase font-weight-bold">
-                                <a href="#!" class="text-white">Review</a>
-                            </h6>
-                        </div>
-                        <!-- Grid column -->
-
-                        <!-- Grid column -->
-                        <div class="col-md-2">
-                            <h6 class="text-uppercase font-weight-bold">
-                                <a href="/project/contact.php" class="text-white">Help</a>
-                            </h6>
-                        </div>
-                        <!-- Grid column -->
-
-                        <!-- Grid column -->
-                        <div class="col-md-2">
-                            <h6 class="text-uppercase font-weight-bold">
-                                <a href="/project/contact.php" class="text-white">Contact</a>
+                                <a href="queries.php" class="text-white">Review</a>
                             </h6>
                         </div>
                         <!-- Grid column -->
@@ -269,81 +273,18 @@ $login = $_SESSION['loggin'];
                 <section class="text-center mb-5">
 
                     <a href="#" class="fa fa-facebook"></a>
-
-                    <a href="#" class="fa fa-twitter"></a>
+                    <a href="#" class="fa fa-x"></a>
                     <a href="#" class="fa fa-instagram"></a>
 
                 </section>
                 <!-- Section: Social -->
             </div>
-            <!-- Grid container -->
-
-            <!-- Copyright -->
-            <!-- Copyright -->
+            <!-- Grid container -->            
+            
         </footer>
         <!-- Footer -->
     </div>
     <!-- End of .container -->
-    <!-- Javascripts -->
-    <script>
-        // const name = document.querySelector("#uname")
-        // const email = document.getElementById("email")
-        // const subject = document.getElementById("subject")
-        // const query = document.getElementById("query")
-
-        // const reply = document.getElementById("message")
-        // const mailReplyBtn = document.getElementById("send")
-
-        // const inputs = [name, email, subject, query]
-
-        // var replyBtns = document.querySelectorAll(".replyBtn");
-
-        // const mailModal = document.getElementById("mailModal")
-        // const modalBtn = document.getElementById("closemodal")
-
-        // modalBtn.addEventListener('click', () => {
-        //     closeModal()
-        // })
-        // replyBtns.forEach(btn => {
-        //     btn.addEventListener('click', async () => {
-        //         mailModal.hidden = false
-        //         var children = []
-        //         let temp = Array.from(btn.parentNode.parentNode.children)
-        //         temp.shift()
-        //         temp.pop()
-        //         for (let x = 0; x < temp.length; x++) {
-        //             children.push(temp[x])
-        //             inputs[x].innerHTML = temp[x].innerHTML
-        //         }
-        //     })
-        // })
-        // mailReplyBtn.addEventListener('click', () => {
-        //     var data = new FormData
-        //     data.append('sender', name.innerHTML)
-        //     data.append('email', email.innerHTML)
-        //     data.append('subject', subject.innerHTML)
-        //     data.append('query', query.innerHTML)
-        //     data.append('message', reply.value)
-
-        //     //send form to mail service
-        //     fetch("./message.php", {
-        //             method: "POST",
-        //             body: data
-        //         }).then(response => response.text())
-        //         .then(data => {
-        //             console.log(data);
-        //         })
-        //         .catch(error => {
-        //             console.error(error);
-        //         });
-        //     reply.value = ''
-        //     closeModal()
-        // })
-
-        // function closeModal() {
-        //     mailModal.hidden = true
-        // }
-    </script>
     <!-- End of Javascripts -->
 </body>
 

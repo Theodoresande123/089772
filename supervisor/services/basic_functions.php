@@ -2,12 +2,12 @@
 
 class JSFunctions
 {
-    public static function alert(?string $message = ""): void
+    public static function alert(?string $message = ""): string | null
     {
-        echo "</script>alert('" . $message . "');</script>";
+        return "</script>alert('" . $message . "');</script>";
     }
-    public static function console(?string $message = ""): void
+    public static function console(?string $message = ""): string | null
     {
-        echo "</script>console.log('" . $message . "');</script>";
+        return "</script>console.log('" . $message . "');</script>";
     }
 }

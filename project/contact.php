@@ -1,10 +1,10 @@
 <?php
 session_start();
 include_once("../connection.php");
-//   if (!isset($_SESSION['username'])) {
-//   	$_SESSION['msg'] = "You must log in first";
-//   	header('location: login.php');
-//   }
+
+if (!isset($_SESSION['loggin']))
+    die(header("Location: ../index.php?msg='You must log in first'"));
+
 if (isset($_GET['logout'])) {
     session_destroy();
     unset($_SESSION['username']);
@@ -216,29 +216,24 @@ $login = $_SESSION['loggin'];
                     <li class="nav-item">
                         <a class="nav-link active">Contact Us</a>
                     </li>
-                    <?php
-                    if ($login) {
-                        echo "</li>
-                            <li class='nav-item'>
-                       <a class='nav-link'href='index.php?logout='1''>LOGOUT</a>
-                        </li>";
-                    }
-                    ?>
+                    <?php if ($login) : ?>
+                        <li class='nav-item'>
+                            <a class='nav-link' href="logout.php">LOGOUT</a>
+                        </li>
+                    <?php endif; ?>
                 </ul>
                 <div class="d-flex">
                     <?php
-                    if (!$login) {
-                        echo '<a class="navbar-brand" href="../login.php">
-                           <img src="https://img.icons8.com/color/48/000000/user.png" alt="" width="30" height="24" class="d-inline-block align-text-top">User Login
-
-                       </a>
-                       <a class="navbar-brand" href="../admin_login.php">
-                           <img src="https://img.icons8.com/external-itim2101-lineal-color-itim2101/64/000000/external-admin-network-technology-itim2101-lineal-color-itim2101-1.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
-                           Admin Login
-
-                       </a>';
-                    }
-                    ?>
+                    if (!$login) : ?>
+                        <a class="navbar-brand" href="../login.php">
+                            <img src="https://img.icons8.com/color/48/000000/user.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                            User Login
+                        </a>
+                        <a class="navbar-brand" href="../admin_login.php">
+                            <img src="https://img.icons8.com/external-itim2101-lineal-color-itim2101/64/000000/external-admin-network-technology-itim2101-lineal-color-itim2101-1.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                            Admin Login
+                        </a>
+                    <?php endif; ?>
                     <?php if (isset($_SESSION['username'])) : ?>
                         <p>
                         <div class="d-flex">
@@ -269,8 +264,8 @@ $login = $_SESSION['loggin'];
                 <form method="POST">
                     <div class="input-row">
                         <div class="input-group">
-                            <label for="">Your Full Name</label>
-                            <input type="text" placeholder="John Smith" name="name">
+                            <label for="">Your Full Name/ username</label>
+                            <input type="text" placeholder="John Smith" name="name" value="<?php echo $_SESSION['username'] ?? null; ?>">
                         </div>
                         <div class="input-group">
                             <label for="">Contact</label>
@@ -392,7 +387,9 @@ $login = $_SESSION['loggin'];
                     <div class="row d-flex justify-content-center">
                         <div class="col-lg-8">
                             <p>
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt distinctio earum repellat quaerat voluptatibus placeat nam, commodi optio pariatur est quia magnam eum harum corrupti dicta, aliquam sequi voluptate quas.
+                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt distinctio earum repellat quaerat
+                                voluptatibus placeat nam, commodi optio pariatur est quia magnam eum harum corrupti dicta, aliquam
+                                sequi voluptate quas.
                             </p>
                         </div>
                     </div>
@@ -413,6 +410,9 @@ $login = $_SESSION['loggin'];
             <!-- Grid container -->
 
             <!-- Copyright -->
+            <p>
+                All Rights Reserved HMS&copy;
+            </p>
             <!-- Copyright -->
         </footer>
         <!-- Footer -->

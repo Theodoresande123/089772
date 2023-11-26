@@ -81,14 +81,11 @@ $login = $_SESSION['loggin'];
                         <li class="nav-item">
                             <a class="nav-link" href="admin_request.php">Requests</a>
                         </li>
-                        <?php
-                        if ($login) {
-                            echo "</li>
+                        <?php if ($login) : ?>
                             <li class='nav-item'>
-                       <a class='nav-link'href='index.php?logout='1''>LOGOUT</a>
-                        </li>";
-                        }
-                        ?>
+                                <a class='nav-link' href="logout.php">LOGOUT</a>
+                            </li>
+                        <?php endif; ?>
                     </ul>
                     <div class="d-flex">
                         <?php

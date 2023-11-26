@@ -2,6 +2,7 @@
 include_once("../connection.php");
 include_once('../server.php');
 include_once('services/otp_core_service.php');
+include_once('../errors.php');
 require_once "../vendor/autoload.php";
 
 ?>
@@ -23,11 +24,8 @@ require_once "../vendor/autoload.php";
 	<div class="header bg-dark">
 		<h2>Supervisor Login</h2>
 	</div>
-	<?php // echo md5("pass123");
-	?>
 
 	<form method="post" action="auth.php">
-		<?php include('../errors.php'); ?>
 		<div class="form-group">
 			<label>Username</label>
 			<input type="text" class="form-control" name="username" id="uname" placeholder="theodoresande">
@@ -55,7 +53,7 @@ require_once "../vendor/autoload.php";
 				Login
 			</button>
 			<a class="" href="../admin_login.php">
-				Log in as Client(student) or Partner
+				Log in as Client(student) or Owner
 			</a>
 		</div>
 
